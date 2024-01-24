@@ -1,6 +1,5 @@
+import { Timestamp } from "mongodb";
 import { Schema, model, models} from "mongoose";
-
-
 
 const taskSchema = new Schema({
     tittle:{
@@ -19,7 +18,8 @@ const taskSchema = new Schema({
         required: [true, 'La descripción es requerido'],
         trim: true,
     },
-    timestamps: true
+    // {timestamps:true}
+   
 });
 
 export default models.Task || model('Task', taskSchema);
