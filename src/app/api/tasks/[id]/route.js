@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { connectDB } from "@/utils/mongoose";
+import { connectDB } from "/src/utils/mongoose";
 import Task from "@/models/Task";
 
 export async function GET(request, {params}){

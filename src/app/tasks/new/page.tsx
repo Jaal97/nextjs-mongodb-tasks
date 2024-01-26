@@ -13,16 +13,24 @@ function FormPage(){
     const router = useRouter()
 
     const createTask = async () => {
-        const res = await fetch('/api/tasks/',{
-            method: "POST",
-            body: JSON.stringify(newTask),
-            headers: {
-                "Content-Type": "application/json"
+       try {
+            const res = await fetch('/api/tasks/',{
+                method: "POST",
+                body: JSON.stringify(newTask),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+            const data = await res.json()
+            if (res.status == 200){
+                router.push('/')
+                // router.refresh()
+                
             }
-        })
-        const data = await res.json()
-        router.push('/')
-        console.log(data)
+            console.log(data)
+       } catch (error) {
+        
+       }
     }
 
     const handleSubmit = async (e: FormEvent) => {
@@ -45,6 +53,9 @@ function FormPage(){
     return(
         <div className="h-[calc(100vh-7rem)] flex justify-center items-center">
             <form onSubmit={handleSubmit}>
+                <h1 className="font-bold text-3xl">
+                    Create Task
+                </h1>
                 <input 
                     type="text" 
                     name="tittle" 
