@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "/src/utils/mongoose";
-import Task from "@/models/Task";
+import Task from "/src/models/Task";
 
 export async function GET(request, {params}){
 

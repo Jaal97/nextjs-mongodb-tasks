@@ -1,7 +1,8 @@
 "use client"
-import { ChangeEvent, FormEvent} from "react";
+import { ChangeEvent, FormEvent, useEffect} from "react";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
+
 
 function FormPage(){
     const [newTask, setNewTask] = useState({
@@ -11,6 +12,21 @@ function FormPage(){
     });
 
     const router = useRouter()
+
+    //Para los parametros que llegan por la URL
+    const params = useParams()
+
+
+    const getTask = async () => {
+        const res = await fetch(`/api/tasks/${params.id}`)
+        const data = await res.json()
+        setNewTask({
+            tittle: data.tittle,
+            description: data.description,
+            autor: data.autor
+        })
+    }
+
 
     const createTask = async () => {
        try {
@@ -24,7 +40,7 @@ function FormPage(){
             const data = await res.json()
             if (res.status == 200){
                 router.push('/')
-                // router.refresh()
+                router.refresh()
                 
             }
             console.log(data)
@@ -33,10 +49,55 @@ function FormPage(){
        }
     }
 
+
+    const updateTask = async () => {
+       try {
+            const res = await fetch(`/api/tasks/${params.id}`, {
+                method: "PUT",
+                body: JSON.stringify(newTask),
+                headers:{
+                    "Content-Type": "application/json",
+                }
+            })
+        const data = await res.json();
+        router.push('/')
+        router.refresh()
+       } catch (error) {
+            console.log(error)
+       }
+
+    };
+
+
+    const handleDelete = async () => {
+        if(
+            window.confirm("¿Estas seguro de eliminar esta tarea?"))
+            {
+                try {
+                    const res = await fetch(`/api/tasks/${params.id}`, { 
+                        method: "DELETE"
+                    })
+                    router.push('/')
+                    router.refresh()
+                } catch (error) {
+                    console.log(error)
+                }
+            }
+        
+    };
+
+
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault()
-        console.log(newTask)
-        await createTask()
+        if(!params.id){
+            await createTask()
+        }else{
+            updateTask()
+        }
+        
+
+
+
         // const res = await fetch('/api/tasks/',{
         //     method: "POST",
         //     body: JSON.stringify(newTask)
@@ -49,13 +110,37 @@ function FormPage(){
         setNewTask({... newTask, [e.target.name]: e.target.value})
     }
 
+    //Comprobar que al momento de cargar este componente vengan sus parametros
+    useEffect(() =>{
+        
+        if(params.id){
+            getTask()
+        }
+
+    }, [])
 
     return(
         <div className="h-[calc(100vh-7rem)] flex justify-center items-center">
             <form onSubmit={handleSubmit}>
+                <header
+                    className="flex justify-between"
+                >
                 <h1 className="font-bold text-3xl">
-                    Create Task
+                    {
+                        params.id ? "Editar Tarea" : "Crear Tarea"
+                    }
                 </h1>
+
+                <button
+                    type="button"
+                    className="bg-red-500 px-3 py-1 rounded-md"
+                    onClick={handleDelete}
+                >
+                    
+                    Delete
+                </button>
+
+                </header>
                 <input 
                     type="text" 
                     name="tittle" 
@@ -63,6 +148,7 @@ function FormPage(){
                     id="" 
                     className="bg-gray-800 border-2 w-full p-4 rounded-lg my-4"
                     onChange={handleChange} 
+                    value={newTask.tittle}
                 />
                 <textarea 
                     name="description"
@@ -71,6 +157,7 @@ function FormPage(){
                     placeholder="Descripcion" 
                     className="bg-gray-800 border-2 w-full p-4 rounded-lg my-4" 
                     onChange={handleChange} 
+                    value={newTask.description}
                 ></textarea>
                 <input 
                     type="text" 
@@ -79,9 +166,14 @@ function FormPage(){
                     id="" 
                     className="bg-gray-800 border-2 w-full p-4 rounded-lg my-4" 
                     onChange={handleChange} 
+                    value={newTask.autor}
                 />
-                <button className="bg-green-600 hover:bg-green-700 text-white font-bold px-4 py-2 rounded-lg" >
-                    Save
+                <button
+                    type="submit" 
+                    className="bg-green-600 hover:bg-green-700 text-white font-bold px-4 py-2 rounded-lg" >
+                    {
+                        !params.id ? "Save" : "Update"
+                    }
                 </button>
             </form>
         </div>
