@@ -1,5 +1,6 @@
 import {connect, connection} from "mongoose";
 
+
 const conn = {
     isConnected: false,
 }
@@ -8,7 +9,7 @@ export async function connectDB(){
 
     if(conn.isConnected) return;
 
-    const db = await connect("mongodb+srv://jaal:UGQPBVATQryrCOIU@learn-mongodb.3ftnt7u.mongodb.net/tasks_db?retryWrites=true&w=majority");
+    const db = await connect(process.env.MONGODB_URI);
 
     // mongodb+srv://<username>:<password>@learn-mongodb.3ftnt7u.mongodb.net/?retryWrites=true&w=majority
    
