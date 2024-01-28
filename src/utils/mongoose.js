@@ -11,7 +11,6 @@ export async function connectDB(){
 
     const db = await connect(process.env.MONGODB_URI);
 
-    // mongodb+srv://<username>:<password>@learn-mongodb.3ftnt7u.mongodb.net/?retryWrites=true&w=majority
    
     console.log(db.connection.db.databaseName);
     conn.isConnected = db.connections[0].readyState
@@ -26,4 +25,3 @@ connection.on('error', (err) => {
     console.log('Mongoose connection error', err)
 });
 
-// password: UGQPBVATQryrCOIU
