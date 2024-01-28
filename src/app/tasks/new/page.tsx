@@ -135,6 +135,8 @@ function FormPage(){
                     type="button"
                     className="bg-red-500 px-3 py-1 rounded-md"
                     onClick={handleDelete}
+                    hidden
+                    
                 >
                     
                     Delete
