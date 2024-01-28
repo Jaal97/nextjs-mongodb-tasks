@@ -13,9 +13,9 @@ async function Homepage(){
   const tasks = await loadTasks()
   loadTasks()
   return(
-    <div className="grid grid-cols-3 gap-2">
+    <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-3 ">
       {tasks.map(task => (
-      <TaskCard task={task} key={task._id}/>
+      <TaskCard className="" task={task} key={task._id} />
 
       
       ))}
